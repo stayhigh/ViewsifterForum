@@ -1,0 +1,25 @@
+---
+import Base from '../layouts/Base.astro';
+import entries from '../data/entries.json';
+
+const financials = entries.filter(e => e.type === 'financial');
+---
+
+<h1 class="text-3xl font-bold mb-2">財務報表</h1>
+<p class="text-[var(--color-muted)] mb-10">即使被動投資也需要懂基本面。至少要知道數字從哪裡來、代表什麼意思。</p>
+
+<div class="space-y-6">
+  {financials.map(entry => (
+    <div class="bg-[var(--color-surface)] border border-[var(--color-border)] rounded-xl p-6">
+      <h2 class="text-lg font-bold mb-2">{entry.title}</h2>
+      <p class="text-sm text-[var(--color-muted)] mb-3 leading-relaxed">{entry.summary}</p>
+      <details class="text-sm text-[var(--color-muted)]">
+        <summary class="cursor-pointer text-[var(--color-accent)] hover:underline">詳細說明</summary>
+        <p class="mt-3 leading-relaxed whitespace-pre-line">{entry.details}</p>
+      </details>
+      <div class="mt-3 text-xs text-[var(--color-muted)]">
+        📎 <a href={entry.source.url} target="_blank" class="hover:text-[var(--color-accent)] underline">{entry.source.name}</a>
+      </div>
+    </div>
+  ))}
+</div>

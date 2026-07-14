@@ -1,0 +1,29 @@
+---
+import Base from '../layouts/Base.astro';
+import entries from '../data/entries.json';
+
+const rules = entries.filter(e => e.type === 'rule' || e.type === 'event' || e.type === 'company');
+---
+
+<h1 class="text-3xl font-bold mb-2">交易規則</h1>
+<p class="text-[var(--color-muted)] mb-10">搞懂遊戲規則，才不會在市場裡吃虧。</p>
+
+<div class="space-y-6">
+  {rules.map(entry => (
+    <div class="bg-[var(--color-surface)] border border-[var(--color-border)] rounded-xl p-6">
+      <div class="flex items-center gap-2 mb-3">
+        <span class="text-xs px-2 py-0.5 rounded bg-[var(--color-accent)]/10 text-[var(--color-accent)]">{entry.type === 'rule' ? '交易規則' : entry.type === 'event' ? '事件' : '公司'}</span>
+        <span class="text-xs text-[var(--color-muted)]">{entry.tags?.join(' · ')}</span>
+      </div>
+      <h2 class="text-lg font-bold mb-2">{entry.title}</h2>
+      <p class="text-sm text-[var(--color-muted)] mb-3 leading-relaxed">{entry.summary}</p>
+      <details class="text-sm text-[var(--color-muted)]">
+        <summary class="cursor-pointer text-[var(--color-accent)] hover:underline">詳細說明</summary>
+        <p class="mt-3 leading-relaxed">{entry.details}</p>
+      </details>
+      <div class="mt-3 text-xs text-[var(--color-muted)]">
+        📎 <a href={entry.source.url} target="_blank" class="hover:text-[var(--color-accent)] underline">{entry.source.name}</a>
+      </div>
+    </div>
+  ))}
+</div>

@@ -1,0 +1,98 @@
+---
+import Base from '../layouts/Base.astro';
+---
+
+<h1 class="text-3xl font-bold mb-2">投資策略</h1>
+<p class="text-[var(--color-muted)] mb-10">不需要內線、不需要看盤，只要紀律。</p>
+
+<section class="mb-16">
+  <h2 class="text-xl font-bold mb-4 text-[var(--color-accent)]">策略一：定期定額買 0050</h2>
+  <div class="bg-[var(--color-surface)] border border-[var(--color-border)] rounded-xl p-6 space-y-4">
+    <div>
+      <h3 class="font-bold mb-2">為什麼是 0050？</h3>
+      <p class="text-sm text-[var(--color-muted)] leading-relaxed">
+        0050 追蹤台灣 50 指數，持有台股市值最大的 50 家公司。買 0050 等於一次買進台積電、鴻海、聯發科、富邦金、台達電等龍頭企業。當台股長期向上，0050 就跟著向上。
+      </p>
+    </div>
+    <div>
+      <h3 class="font-bold mb-2">具體做法</h3>
+      <ul class="text-sm text-[var(--color-muted)] space-y-2">
+        <li>• 開立證券戶，設定每月固定日期扣款買進 0050（或費用更低的 006208）</li>
+        <li>• 金額固定，不因大盤高低而改變。大盤高買少一點，大盤低買多一點——自動做到「低買高不追」</li>
+        <li>• 不要停扣。大跌時尤其要繼續扣，因為同樣的錢買到更多張</li>
+        <li>• 持有至少 5 年，理想是 10-20 年</li>
+      </ul>
+    </div>
+    <div>
+      <h3 class="font-bold mb-2">預期報酬</h3>
+      <p class="text-sm text-[var(--color-muted)]">
+        台股加權指數長期年化報酬約 8-10%。以每月投入 1 萬元計算，20 年後約 580-760 萬元（本金 240 萬），30 年後約 1,500-2,300 萬元（本金 360 萬）。
+      </p>
+    </div>
+  </div>
+</section>
+
+<section class="mb-16">
+  <h2 class="text-xl font-bold mb-4 text-[var(--color-accent)]">策略二：大跌加碼</h2>
+  <div class="bg-[var(--color-surface)] border border-[var(--color-border)] rounded-xl p-6 space-y-4">
+    <div>
+      <h3 class="font-bold mb-2">什麼時候加碼？</h3>
+      <p class="text-sm text-[var(--color-muted)] leading-relaxed">
+        大盤從高點回檔 10%、20%、30% 時，分別動用戰備現金加碼。不是猜底，是買便宜。
+      </p>
+    </div>
+    <div>
+      <h3 class="font-bold mb-2">加碼計畫範例</h3>
+      <div class="overflow-x-auto">
+        <table class="w-full text-sm">
+          <thead>
+            <tr class="border-b border-[var(--color-border)]">
+              <th class="text-left py-2 text-[var(--color-muted)]">跌幅</th>
+              <th class="text-left py-2 text-[var(--color-muted)]">加碼金額</th>
+              <th class="text-left py-2 text-[var(--color-muted)]">說明</th>
+            </tr>
+          </thead>
+          <tbody class="text-[var(--color-muted)]">
+            <tr class="border-b border-[var(--color-border)]">
+              <td class="py-2">-10%</td>
+              <td class="py-2">戰備金 25%</td>
+              <td class="py-2">輕度修正，小量進場</td>
+            </tr>
+            <tr class="border-b border-[var(--color-border)]">
+              <td class="py-2">-20%</td>
+              <td class="py-2">戰備金 35%</td>
+              <td class="py-2">中度修正，加大力道</td>
+            </tr>
+            <tr class="border-b border-[var(--color-border)]">
+              <td class="py-2">-30%</td>
+              <td class="py-2">戰備金 40%</td>
+              <td class="py-2">深度修正，全力進場</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+    <div class="bg-[var(--color-bg)] border border-[var(--color-border)] rounded-lg p-4">
+      <p class="text-sm text-[var(--color-accent-warm)] font-bold mb-1">⚠️ 重要提醒</p>
+      <p class="text-sm text-[var(--color-muted)]">不用猜底。你不知道 -10% 之後會不會繼續跌到 -30%，所以才分批。每一批進場後就當作長期持有，不因後續漲跌改變計畫。</p>
+    </div>
+  </div>
+</section>
+
+<section class="mb-16">
+  <h2 class="text-xl font-bold mb-4 text-[var(--color-accent)]">不要做的事</h2>
+  <div class="space-y-3">
+    <div class="bg-[var(--color-surface)] border border-[var(--color-red)]/30 rounded-xl p-4">
+      <p class="text-sm"><span class="text-[var(--color-red)] font-bold">❌ 聽明牌買個股</span> — 你聽到時，股價早就反應完了。真正的好消息輪不到散戶先知道。</p>
+    </div>
+    <div class="bg-[var(--color-surface)] border border-[var(--color-red)]/30 rounded-xl p-4">
+      <p class="text-sm"><span class="text-[var(--color-red)] font-bold">❌ 開融資槓桿</span> — 融資利息年化 6%+，大盤長期報酬才 8-10%，利差太小，風險極大。</p>
+    </div>
+    <div class="bg-[var(--color-surface)] border border-[var(--color-red)]/30 rounded-xl p-4">
+      <p class="text-sm"><span class="text-[var(--color-red)] font-bold">❌ 頻繁當沖</span> — 當沖賺的是手續費和稅的錢。長期統計，當沖客 90% 以上虧損。</p>
+    </div>
+    <div class="bg-[var(--color-surface)] border border-[var(--color-red)]/30 rounded-xl p-4">
+      <p class="text-sm"><span class="text-[var(--color-red)] font-bold">❌ 恐慌時賣出</span> — 台股歷史 60 年，每次大跌都漲回來並創新高。賣在低點 = 把暫時的帳面虧損變成永久的實際虧損。</p>
+    </div>
+  </div>
+</section>

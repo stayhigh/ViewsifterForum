@@ -1,0 +1,25 @@
+---
+import '../styles/global.css';
+---
+<!doctype html>
+<html lang="zh-TW">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>台股投資知識庫</title>
+  </head>
+  <body class="min-h-screen bg-[var(--color-bg)] text-[var(--color-text)]">
+    <nav class="border-b border-[var(--color-border)] sticky top-0 bg-[var(--color-bg)]/95 backdrop-blur z-50">
+      <div class="max-w-4xl mx-auto px-4 py-3 flex items-center gap-6 text-sm">
+        <a href="/" class="font-bold text-[var(--color-accent)]">台股投資知識庫</a>
+        <a href="/strategy" class="text-[var(--color-muted)] hover:text-[var(--color-text)]">投資策略</a>
+        <a href="/rules" class="text-[var(--color-muted)] hover:text-[var(--color-text)]">交易規則</a>
+        <a href="/tax" class="text-[var(--color-muted)] hover:text-[var(--color-text)]">稅制</a>
+        <a href="/finance" class="text-[var(--color-muted)] hover:text-[var(--color-text)]">財務</a>
+      </div>
+    </nav>
+    <main class="max-w-4xl mx-auto px-4 py-8">
+      <slot />
+    </main>
+  </body>
+</html>
