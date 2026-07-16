@@ -1,0 +1,204 @@
+---
+// ViewsForum — Wabi-Sabi 侘寂極簡風格
+// Global layout component
+
+const userCookie = Astro.cookies.get("user_info")?.value;
+const user = userCookie ? JSON.parse(userCookie) : null;
+---
+
+<!doctype html>
+<html lang="zh-TW">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>ViewsForum — 深度對話 · 思想淬煉</title>
+    <meta name="description" content="專注於人工智慧、理財投資與人生哲學的深度交流社群" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+  </head>
+  <body>
+    <header class="topbar">
+      <div class="topbar-inner container">
+        <a href="/" class="logo">ViewsForum</a>
+        <nav class="topbar-nav">
+          <a href="/category/ai">AI</a>
+          <a href="/category/fin">投資</a>
+          <a href="/category/life">哲學</a>
+          {
+            user ? (
+              <>
+                <a href="/topic/new" class="btn-new">＋ 發文</a>
+                <div class="user-menu">
+                  <img src={user.avatar} alt={user.name} class="user-avatar" width="28" height="28" />
+                  <span class="user-name">{user.name}</span>
+                  <a href="/api/auth/logout" class="btn-logout">登出</a>
+                </div>
+              </>
+            ) : (
+              <>
+                <a href="/auth/login" class="btn-login">登入</a>
+                <a href="/auth/register" class="btn-login">註冊</a>
+              </>
+            )
+          }
+        </nav>
+      </div>
+    </header>
+
+    <slot />
+
+    <footer class="site-footer">
+      <div class="container">
+        <p>ViewsForum — 少即是多</p>
+      </div>
+    </footer>
+  </body>
+</html>
+
+<style is:global>
+  /* ===== Wabi-Sabi Design System ===== */
+  :root {
+    --color-paper: #F9F7F1;
+    --color-ink: #2C2C2C;
+    --color-earth: #8B7355;
+    --color-earth-light: #A68B6B;
+    --color-border: #E8E4D9;
+    --color-muted: #8A8A8A;
+    --font-body: "Noto Serif TC", "Source Han Serif TC", "Songti TC", Georgia, serif;
+    --font-mono: "SF Mono", "Cascadia Code", monospace;
+    --radius: 4px;
+    --max-width: 720px;
+  }
+
+  *,
+  *::before,
+  *::after {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+  }
+
+  html {
+    font-size: 16px;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  body {
+    font-family: var(--font-body);
+    color: var(--color-ink);
+    background-color: var(--color-paper);
+    line-height: 1.8;
+    min-height: 100vh;
+  }
+
+  a {
+    color: var(--color-earth);
+    text-decoration: none;
+    border-bottom: 1px solid transparent;
+    transition: border-color 0.2s ease;
+  }
+
+  a:hover {
+    border-bottom-color: var(--color-earth);
+  }
+
+  img {
+    max-width: 100%;
+    height: auto;
+  }
+
+  /* Utility */
+  .container {
+    max-width: var(--max-width);
+    margin: 0 auto;
+    padding: 0 1.5rem;
+  }
+</style>
+
+<style>
+  .topbar {
+    border-bottom: 1px solid var(--color-border);
+    padding: 0.75rem 0;
+    background: var(--color-paper);
+  }
+
+  .topbar-inner {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+  }
+
+  .logo {
+    font-size: 1.05rem;
+    font-weight: 400;
+    letter-spacing: 0.08em;
+    color: var(--color-ink);
+    border-bottom: none;
+  }
+
+  .topbar-nav {
+    display: flex;
+    align-items: center;
+    gap: 1.25rem;
+    font-size: 0.85rem;
+  }
+
+  .topbar-nav a {
+    border-bottom: none;
+    color: var(--color-muted);
+    transition: color 0.2s ease;
+  }
+
+  .topbar-nav a:hover {
+    color: var(--color-earth);
+    border-bottom: none;
+  }
+
+  .btn-login,
+  .btn-logout {
+    font-size: 0.8rem;
+    color: var(--color-earth) !important;
+  }
+
+  .btn-new {
+    font-size: 0.8rem;
+    color: var(--color-earth) !important;
+  }
+
+  .user-menu {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+
+  .user-avatar {
+    border-radius: 50%;
+    width: 28px;
+    height: 28px;
+  }
+
+  .user-name {
+    font-size: 0.8rem;
+    color: var(--color-ink);
+  }
+
+  .site-footer {
+    border-top: 1px solid var(--color-border);
+    padding: 2rem 0;
+    margin-top: 4rem;
+    text-align: center;
+    font-size: 0.8rem;
+    color: var(--color-muted);
+    letter-spacing: 0.05em;
+  }
+
+  @media (max-width: 640px) {
+    .topbar-nav {
+      gap: 0.75rem;
+    }
+    .user-name {
+      display: none;
+    }
+  }
+</style>

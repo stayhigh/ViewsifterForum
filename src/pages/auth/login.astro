@@ -1,0 +1,122 @@
+---
+import Layout from "../../layouts/Layout.astro";
+
+const message = Astro.url.searchParams.get("msg") || "";
+---
+
+<Layout>
+  <main class="container auth-page">
+    <div class="auth-card">
+      <h1>登入 ViewsForum</h1>
+      <p class="auth-sub">歡迎回來</p>
+
+      {message && <p class="auth-msg">{message}</p>}
+
+      <form action="/api/auth/login" method="POST" class="auth-form">
+        <label>Email</label>
+        <input type="email" name="email" placeholder="your@email.com" required />
+
+        <label>密碼</label>
+        <input type="password" name="password" placeholder="輸入密碼" required />
+
+        <button type="submit" class="btn-primary">登入</button>
+      </form>
+
+      <p class="auth-footer">
+        還沒有帳號？<a href="/auth/register">註冊</a>
+      </p>
+    </div>
+  </main>
+</Layout>
+
+<style>
+  .auth-page {
+    display: flex;
+    justify-content: center;
+    padding-top: 4rem;
+    padding-bottom: 4rem;
+  }
+
+  .auth-card {
+    width: 100%;
+    max-width: 400px;
+  }
+
+  .auth-card h1 {
+    font-size: 1.4rem;
+    font-weight: 400;
+    color: var(--color-ink);
+    letter-spacing: 0.05em;
+  }
+
+  .auth-sub {
+    margin-top: 0.4rem;
+    font-size: 0.9rem;
+    color: var(--color-muted);
+    margin-bottom: 1.5rem;
+  }
+
+  .auth-msg {
+    background: var(--color-earth);
+    color: var(--color-paper);
+    padding: 0.6rem 1rem;
+    border-radius: var(--radius);
+    font-size: 0.85rem;
+    margin-bottom: 1rem;
+  }
+
+  .auth-form label {
+    display: block;
+    font-size: 0.85rem;
+    color: var(--color-ink);
+    margin: 1rem 0 0.35rem;
+  }
+
+  .auth-form input {
+    width: 100%;
+    padding: 0.65rem 0.75rem;
+    font-size: 0.95rem;
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius);
+    background: var(--color-paper);
+    color: var(--color-ink);
+    font-family: inherit;
+    box-sizing: border-box;
+  }
+
+  .auth-form input:focus {
+    outline: none;
+    border-color: var(--color-earth);
+  }
+
+  .btn-primary {
+    width: 100%;
+    margin-top: 1.5rem;
+    padding: 0.75rem;
+    font-size: 0.95rem;
+    background: var(--color-earth);
+    color: var(--color-paper);
+    border: none;
+    border-radius: var(--radius);
+    cursor: pointer;
+    font-family: inherit;
+    letter-spacing: 0.04em;
+    transition: opacity 0.15s;
+  }
+
+  .btn-primary:hover {
+    opacity: 0.9;
+  }
+
+  .auth-footer {
+    margin-top: 1.5rem;
+    text-align: center;
+    font-size: 0.85rem;
+    color: var(--color-muted);
+  }
+
+  .auth-footer a {
+    color: var(--color-earth);
+    border-bottom: none;
+  }
+</style>

@@ -1,0 +1,11 @@
+name = "viewsforum"
+compatibility_date = "2026-07-15"
+main = "dist/_worker.js"
+
+[[d1_databases]]
+binding = "DB"
+database_name = "viewsforum-db"
+database_id = "147e78a3-1fd2-4aea-8b70-f847c63b4cc1"
+
+[env.production]
+database_id = ""

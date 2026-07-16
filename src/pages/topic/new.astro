@@ -1,0 +1,148 @@
+---
+import Layout from "../../layouts/Layout.astro";
+import type { Category } from "../../lib/types";
+
+const userCookie = Astro.cookies.get("user_info")?.value;
+const user = userCookie ? JSON.parse(userCookie) : null;
+
+if (!user) {
+  return Astro.redirect("/auth/login");
+}
+---
+
+<Layout>
+  <main class="container">
+    <header class="page-header">
+      <a href="/" class="back-link">← 返回首頁</a>
+      <h1 class="page-title">發表新主題</h1>
+    </header>
+
+    <form action="/api/topics" method="POST" class="topic-form">
+      <label class="form-field">
+        <span class="form-label">分類</span>
+        <select name="category" required class="form-select">
+          <option value="">— 選擇分類 —</option>
+          <option value="AI">🤖 科技奇點</option>
+          <option value="FIN">📈 財富自由</option>
+          <option value="LIFE">🧘 生命哲學</option>
+        </select>
+      </label>
+
+      <label class="form-field">
+        <span class="form-label">標題</span>
+        <input
+          type="text"
+          name="title"
+          required
+          maxlength="50"
+          placeholder="你的討論主題…"
+          class="form-input"
+        />
+      </label>
+
+      <label class="form-field">
+        <span class="form-label">內文 <span class="form-hint">（支援 Markdown）</span></span>
+        <textarea
+          name="content"
+          required
+          maxlength="10000"
+          rows="16"
+          placeholder="寫下你的想法…"
+          class="form-textarea"
+        ></textarea>
+      </label>
+
+      <div class="form-actions">
+        <button type="submit" class="btn-submit">發布</button>
+      </div>
+    </form>
+  </main>
+</Layout>
+
+<style>
+  .page-header {
+    padding: 2.5rem 0 2rem;
+    border-bottom: 1px solid var(--color-border);
+    margin-bottom: 2rem;
+  }
+
+  .back-link {
+    display: inline-block;
+    font-size: 0.85rem;
+    color: var(--color-muted);
+    margin-bottom: 1rem;
+  }
+
+  .page-title {
+    font-size: 1.5rem;
+    font-weight: 400;
+    letter-spacing: 0.08em;
+    color: var(--color-ink);
+  }
+
+  .topic-form {
+    max-width: 640px;
+  }
+
+  .form-field {
+    display: block;
+    margin-bottom: 2rem;
+  }
+
+  .form-label {
+    display: block;
+    font-size: 0.85rem;
+    color: var(--color-muted);
+    margin-bottom: 0.4rem;
+    letter-spacing: 0.05em;
+  }
+
+  .form-hint {
+    font-size: 0.75rem;
+    color: var(--color-muted);
+  }
+
+  .form-select,
+  .form-input,
+  .form-textarea {
+    width: 100%;
+    padding: 0.65rem 0.75rem;
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius);
+    font-family: var(--font-body);
+    font-size: 0.95rem;
+    color: var(--color-ink);
+    background: var(--color-paper);
+    outline: none;
+    transition: border-color 0.2s ease;
+  }
+
+  .form-select:focus,
+  .form-input:focus,
+  .form-textarea:focus {
+    border-color: var(--color-earth);
+  }
+
+  .form-textarea {
+    resize: vertical;
+    line-height: 1.7;
+  }
+
+  .btn-submit {
+    padding: 0.65rem 2rem;
+    border: 1px solid var(--color-earth);
+    border-radius: var(--radius);
+    background: transparent;
+    color: var(--color-earth);
+    font-family: var(--font-body);
+    font-size: 0.9rem;
+    cursor: pointer;
+    letter-spacing: 0.05em;
+    transition: all 0.2s ease;
+  }
+
+  .btn-submit:hover {
+    background: var(--color-earth);
+    color: var(--color-paper);
+  }
+</style>

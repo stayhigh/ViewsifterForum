@@ -1,116 +1,182 @@
 ---
-import Base from '../layouts/Base.astro';
+import Layout from "../layouts/Layout.astro";
+import { getAllTopics, getExcerpt } from "../lib/data";
+import { CATEGORY_META } from "../lib/types";
+
+const env = (Astro.locals as any).runtime?.env;
+const topics = await getAllTopics(env);
+const recent = topics.slice(0, 6);
 ---
 
-<section class="mb-16">
-  <h1 class="text-4xl font-bold mb-4">台股投資知識庫</h1>
-  <p class="text-xl text-[var(--color-muted)] max-w-2xl">
-    從零開始學習台股投資。不報明牌、不賣課程，只給你經過驗證的知識和方法。
-  </p>
-</section>
+<Layout>
+  <main class="container">
+    <header class="hero">
+      <h1 class="hero-title">ViewsForum</h1>
+      <p class="hero-subtitle">深度對話 · 思想淬煉</p>
+    </header>
 
-<!-- 核心策略 -->
-<section class="mb-16">
-  <h2 class="text-2xl font-bold mb-6 text-[var(--color-accent)]">核心策略</h2>
+    <nav class="categories">
+      <a href="/category/ai" class="category-card">
+        <span class="category-icon">{CATEGORY_META.AI.icon}</span>
+        <span class="category-name">{CATEGORY_META.AI.name}</span>
+        <span class="category-desc">{CATEGORY_META.AI.desc}</span>
+      </a>
+      <a href="/category/fin" class="category-card">
+        <span class="category-icon">{CATEGORY_META.FIN.icon}</span>
+        <span class="category-name">{CATEGORY_META.FIN.name}</span>
+        <span class="category-desc">{CATEGORY_META.FIN.desc}</span>
+      </a>
+      <a href="/category/life" class="category-card">
+        <span class="category-icon">{CATEGORY_META.LIFE.icon}</span>
+        <span class="category-name">{CATEGORY_META.LIFE.name}</span>
+        <span class="category-desc">{CATEGORY_META.LIFE.desc}</span>
+      </a>
+    </nav>
 
-  <div class="grid gap-6 md:grid-cols-2">
-    <div class="bg-[var(--color-surface)] border border-[var(--color-border)] rounded-xl p-6">
-      <div class="text-2xl mb-3">📈</div>
-      <h3 class="text-lg font-bold mb-2">被動投資 — 定期定額 0050</h3>
-      <p class="text-[var(--color-muted)] text-sm mb-4 leading-relaxed">
-        每月固定金額買進台灣 50 ETF（0050），不選股、不擇時，長期持有。這是經過學術驗證、適合絕大多數人的策略。年化報酬 8-10%，打敗 90% 的散戶。
-      </p>
-      <ul class="text-sm text-[var(--color-muted)] space-y-1">
-        <li>✅ 標的：0050 或 006208</li>
-        <li>✅ 頻率：每月固定日期買入</li>
-        <li>✅ 持有：至少 5-10 年，不因漲跌買賣</li>
-        <li>✅ 心態：投資台灣經濟，不是賭博</li>
-      </ul>
-    </div>
+    <section class="feed">
+      <h2 class="feed-title">最新討論</h2>
+      {
+        recent.map((topic) => (
+          <article class="topic-card">
+            <a href={`/topic/${topic.slug}`} class="topic-link">
+              <span class="topic-cat">{CATEGORY_META[topic.category].icon} {CATEGORY_META[topic.category].name}</span>
+              <h3 class="topic-title">{topic.title}</h3>
+              <p class="topic-excerpt">{getExcerpt(topic.content)}</p>
+            </a>
+          </article>
+        ))
+      }
+      <p class="feed-footer">— 共 {topics.length} 篇討論 —</p>
+    </section>
+  </main>
+</Layout>
 
-    <div class="bg-[var(--color-surface)] border border-[var(--color-border)] rounded-xl p-6">
-      <div class="text-2xl mb-3">💰</div>
-      <h3 class="text-lg font-bold mb-2">大跌加碼策略</h3>
-      <p class="text-[var(--color-muted)] text-sm mb-4 leading-relaxed">
-        大盤下跌時，同樣的錢買到更多股數。在定期定額之外，保留部分現金，在大盤修正時分批進場。
-      </p>
-      <ul class="text-sm text-[var(--color-muted)] space-y-1">
-        <li>🎯 現金分配：70% 定期定額 + 30% 戰備現金</li>
-        <li>🎯 加碼條件：大盤每跌 5-10% 加碼一批</li>
-        <li>🎯 不要 all in：分成 3-6 批進場</li>
-        <li>🎯 只用閒錢：不是生活費、不是借來的</li>
-      </ul>
-    </div>
-  </div>
-</section>
+<style>
+  .hero {
+    text-align: center;
+    padding: 5rem 0 4rem;
+  }
 
-<!-- 投資原則 -->
-<section class="mb-16">
-  <h2 class="text-2xl font-bold mb-6 text-[var(--color-accent)]">三個不可違反的原則</h2>
+  .hero-title {
+    font-size: 2rem;
+    font-weight: 400;
+    letter-spacing: 0.15em;
+    color: var(--color-ink);
+  }
 
-  <div class="space-y-4">
-    <div class="bg-[var(--color-surface)] border border-[var(--color-border)] rounded-xl p-5 flex gap-4">
-      <div class="text-2xl flex-shrink-0">1</div>
-      <div>
-        <h3 class="font-bold mb-1">不要試圖擇時</h3>
-        <p class="text-sm text-[var(--color-muted)]">沒有人能持續準確預測市場高低點。定期定額就是承認這件事，用紀律取代預測。</p>
-      </div>
-    </div>
-    <div class="bg-[var(--color-surface)] border border-[var(--color-border)] rounded-xl p-5 flex gap-4">
-      <div class="text-2xl flex-shrink-0">2</div>
-      <div>
-        <h3 class="font-bold mb-1">不要恐慌賣出</h3>
-        <p class="text-sm text-[var(--color-muted)]">台股歷史上，每 2-3 年就會有一次超過 20% 的修正。每次修正後，大盤都創了新高。賣在低點是散戶虧損的最大原因。</p>
-      </div>
-    </div>
-    <div class="bg-[var(--color-surface)] border border-[var(--color-border)] rounded-xl p-5 flex gap-4">
-      <div class="text-2xl flex-shrink-0">3</div>
-      <div>
-        <h3 class="font-bold mb-1">不要借錢投資</h3>
-        <p class="text-sm text-[var(--color-muted)]">融資、信貸、房貸再融資來買股票，等於把短期負債拿去投長期資產。市場修正時，你可能被迫在低點賣出還錢。</p>
-      </div>
-    </div>
-  </div>
-</section>
+  .hero-subtitle {
+    margin-top: 0.75rem;
+    font-size: 1rem;
+    color: var(--color-muted);
+    letter-spacing: 0.08em;
+  }
 
-<!-- 為什麼你不用選股 -->
-<section class="mb-16">
-  <h2 class="text-2xl font-bold mb-6 text-[var(--color-accent)]">為什麼你不用選股</h2>
+  .categories {
+    display: flex;
+    gap: 1.25rem;
+    margin-bottom: 4rem;
+    flex-wrap: wrap;
+  }
 
-  <div class="grid gap-6 md:grid-cols-3">
-    <div class="bg-[var(--color-surface)] border border-[var(--color-border)] rounded-xl p-5 text-center">
-      <div class="text-3xl mb-3 text-[var(--color-accent)]">90%</div>
-      <p class="text-sm text-[var(--color-muted)]">散戶主動選股的長期報酬低於被動投資大盤的比例</p>
-    </div>
-    <div class="bg-[var(--color-surface)] border border-[var(--color-border)] rounded-xl p-5 text-center">
-      <div class="text-3xl mb-3 text-[var(--color-accent-warm)]">8-10%</div>
-      <p class="text-sm text-[var(--color-muted)]">0050 長期年化報酬率，與台股加權指數幾乎一致</p>
-    </div>
-    <div class="bg-[var(--color-surface)] border border-[var(--color-border)] rounded-xl p-5 text-center">
-      <div class="text-3xl mb-3 text-[var(--color-green)]">0 分鐘</div>
-      <p class="text-sm text-[var(--color-muted)]">被動投資每天需要的時間。設定好自動扣款後，幾乎不用管理</p>
-    </div>
-  </div>
-</section>
+  .category-card {
+    flex: 1;
+    min-width: 180px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 2rem 1.25rem;
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius);
+    background: transparent;
+    transition: border-color 0.2s ease;
+    border-bottom: 1px solid var(--color-border);
+  }
 
-<!-- 快速導覽 -->
-<section>
-  <h2 class="text-2xl font-bold mb-6 text-[var(--color-accent)]">深入了解</h2>
-  <div class="grid gap-4 md:grid-cols-3">
-    <a href="/rules" class="bg-[var(--color-surface)] border border-[var(--color-border)] rounded-xl p-5 hover:border-[var(--color-accent)] transition-colors">
-      <div class="text-xl mb-2">📋</div>
-      <h3 class="font-bold mb-1">交易規則</h3>
-      <p class="text-sm text-[var(--color-muted)]">交易時間、漲跌幅限制、零股、當沖、融資融券</p>
-    </a>
-    <a href="/tax" class="bg-[var(--color-surface)] border border-[var(--color-border)] rounded-xl p-5 hover:border-[var(--color-accent)] transition-colors">
-      <div class="text-xl mb-2">🧾</div>
-      <h3 class="font-bold mb-1">稅制</h3>
-      <p class="text-sm text-[var(--color-muted)]">證交稅、股利所得稅、二代健保、海外所得</p>
-    </a>
-    <a href="/finance" class="bg-[var(--color-surface)] border border-[var(--color-border)] rounded-xl p-5 hover:border-[var(--color-accent)] transition-colors">
-      <div class="text-xl mb-2">📊</div>
-      <h3 class="font-bold mb-1">財務報表</h3>
-      <p class="text-sm text-[var(--color-muted)]">如何查財報、三大報表、關鍵指標</p>
-    </a>
-  </div>
-</section>
+  .category-card:hover {
+    border-color: var(--color-earth);
+    border-bottom: 1px solid var(--color-earth);
+  }
+
+  .category-icon {
+    font-size: 2rem;
+    margin-bottom: 0.75rem;
+  }
+
+  .category-name {
+    font-size: 1.05rem;
+    color: var(--color-ink);
+    margin-bottom: 0.35rem;
+    letter-spacing: 0.05em;
+  }
+
+  .category-desc {
+    font-size: 0.8rem;
+    color: var(--color-muted);
+    text-align: center;
+  }
+
+  .feed {
+    border-top: 1px solid var(--color-border);
+    padding-top: 2.5rem;
+  }
+
+  .feed-title {
+    font-size: 1.1rem;
+    font-weight: 400;
+    color: var(--color-muted);
+    margin-bottom: 1.5rem;
+    letter-spacing: 0.05em;
+  }
+
+  .topic-card {
+    border-bottom: 1px solid var(--color-border);
+  }
+
+  .topic-link {
+    display: block;
+    padding: 1.5rem 0;
+    border-bottom: none;
+  }
+
+  .topic-link:hover {
+    border-bottom: none;
+  }
+
+  .topic-link:hover .topic-title {
+    color: var(--color-earth);
+  }
+
+  .topic-cat {
+    font-size: 0.75rem;
+    color: var(--color-earth);
+    letter-spacing: 0.05em;
+  }
+
+  .topic-title {
+    font-size: 1.05rem;
+    font-weight: 400;
+    color: var(--color-ink);
+    margin: 0.35rem 0 0.4rem;
+    letter-spacing: 0.03em;
+    transition: color 0.2s ease;
+  }
+
+  .topic-excerpt {
+    font-size: 0.85rem;
+    color: var(--color-muted);
+    line-height: 1.7;
+  }
+
+  .feed-footer {
+    text-align: center;
+    color: var(--color-muted);
+    padding: 2rem 0 0;
+    font-size: 0.85rem;
+  }
+
+  @media (max-width: 640px) {
+    .hero { padding: 3rem 0 2.5rem; }
+    .hero-title { font-size: 1.5rem; }
+    .categories { flex-direction: column; }
+  }
+</style>

@@ -1,0 +1,8 @@
+CREATE TABLE IF NOT EXISTS users (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  google_id TEXT UNIQUE NOT NULL,
+  name TEXT NOT NULL,
+  avatar TEXT,
+  email TEXT NOT NULL,
+  joined_at TEXT NOT NULL DEFAULT (datetime('now'))
+);

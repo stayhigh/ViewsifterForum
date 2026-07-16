@@ -1,0 +1,154 @@
+---
+import Layout from "../../layouts/Layout.astro";
+import { getTopicBySlug, renderMarkdown } from "../../lib/data";
+import { CATEGORY_META } from "../../lib/types";
+import type { Category } from "../../lib/types";
+
+const { slug } = Astro.params;
+const env = (Astro.locals as any).runtime?.env;
+const topic = await getTopicBySlug(slug!, env);
+
+if (!topic) {
+  return new Response("Not Found", { status: 404 });
+}
+
+const meta = CATEGORY_META[topic.category];
+const catKey = topic.category.toLowerCase();
+---
+
+<Layout>
+  <main class="container">
+    <header class="article-header">
+      <a href={`/category/${catKey}`} class="back-link">
+        ← {meta.icon} {meta.name}
+      </a>
+      <h1 class="article-title">{topic.title}</h1>
+      <div class="article-meta">
+        <time datetime={topic.created_at}>
+          {new Date(topic.created_at).toLocaleDateString("zh-TW", {
+            year: "numeric",
+            month: "long",
+            day: "numeric",
+            timeZone: "UTC",
+          })}
+        </time>
+        {topic.user_name && <span class="author">— {topic.user_name}</span>}
+      </div>
+    </header>
+
+    <article class="article-body">
+      <Fragment set:html={renderMarkdown(topic.content)} />
+    </article>
+
+    <section class="comments-section">
+      <h2 class="comments-title">討論</h2>
+      <p class="comments-empty">— 尚無回覆，登入後參與討論 —</p>
+    </section>
+  </main>
+</Layout>
+
+<style>
+  .article-header {
+    padding: 3rem 0 2rem;
+    border-bottom: 1px solid var(--color-border);
+    margin-bottom: 2rem;
+  }
+
+  .back-link {
+    display: inline-block;
+    font-size: 0.85rem;
+    color: var(--color-muted);
+    margin-bottom: 1.5rem;
+  }
+
+  .article-title {
+    font-size: 1.75rem;
+    font-weight: 400;
+    line-height: 1.5;
+    letter-spacing: 0.05em;
+    color: var(--color-ink);
+  }
+
+  .article-meta {
+    margin-top: 1rem;
+    font-size: 0.85rem;
+    color: var(--color-muted);
+  }
+
+  .author {
+    color: var(--color-earth);
+  }
+
+  .article-body {
+    font-size: 1rem;
+    line-height: 1.9;
+    color: var(--color-ink);
+    padding-bottom: 3rem;
+    border-bottom: 1px solid var(--color-border);
+  }
+
+  .article-body :global(h2) {
+    font-size: 1.3rem;
+    font-weight: 400;
+    margin: 2.5rem 0 1rem;
+    letter-spacing: 0.05em;
+  }
+
+  .article-body :global(h3) {
+    font-size: 1.1rem;
+    font-weight: 400;
+    margin: 2rem 0 0.75rem;
+    letter-spacing: 0.04em;
+  }
+
+  .article-body :global(p) {
+    margin: 1rem 0;
+  }
+
+  .article-body :global(ul),
+  .article-body :global(ol) {
+    margin: 0.75rem 0;
+    padding-left: 1.5rem;
+  }
+
+  .article-body :global(li) {
+    margin: 0.35rem 0;
+  }
+
+  .article-body :global(strong) {
+    font-weight: 500;
+  }
+
+  .article-body :global(blockquote) {
+    border-left: 3px solid var(--color-earth);
+    margin: 1.5rem 0;
+    padding: 0.5rem 1rem;
+    color: var(--color-muted);
+    font-style: italic;
+  }
+
+  .article-body :global(hr) {
+    border: none;
+    border-top: 1px solid var(--color-border);
+    margin: 2rem 0;
+  }
+
+  .comments-section {
+    padding: 2.5rem 0 4rem;
+  }
+
+  .comments-title {
+    font-size: 1.1rem;
+    font-weight: 400;
+    color: var(--color-muted);
+    margin-bottom: 1.5rem;
+    letter-spacing: 0.05em;
+  }
+
+  .comments-empty {
+    text-align: center;
+    color: var(--color-muted);
+    font-size: 0.9rem;
+    padding: 2rem 0;
+  }
+</style>
