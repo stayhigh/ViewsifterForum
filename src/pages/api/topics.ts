@@ -37,14 +37,12 @@ export const POST: APIRoute = async ({ request, cookies, locals }) => {
     return new Response("Invalid category", { status: 400 });
   }
 
-  // Generate slug from title (keep Chinese, strip unsafe chars)
-  const base = title
-    .replace(/[：:？?！!，,。\\.、\\s]+/g, "-")
-    .replace(/[^\\w\\u4e00-\\u9fff-]/g, "")
-    .replace(/-+/g, "-")
-    .replace(/^-|-$/g, "")
-    .slice(0, 80);
-  const slug = `${Date.now()}-${base || "topic"}`;
+  // Slug: timestamp ensures uniqueness; append cleaned title prefix
+  const prefix = title
+    .replace(/[^\w\u4e00-\u9fff]/g, "")
+    .slice(0, 15)
+    .toLowerCase();
+  const slug = `${Date.now()}-${prefix || "topic"}`;
 
   try {
     const result = await env.DB.prepare(
