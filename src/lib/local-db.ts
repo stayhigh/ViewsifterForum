@@ -3,7 +3,7 @@ import type { Topic } from "./types";
 // Local SQLite fallback for development only.
 // Uses dynamic import so better-sqlite3 is not bundled into Cloudflare worker.
 
-async function getLocalDb(): Promise<any> {
+export async function getLocalDb(): Promise<any> {
   const Database = (await import("better-sqlite3")).default;
   const path = (await import("node:path")).default;
   const { fileURLToPath } = await import("node:url");
