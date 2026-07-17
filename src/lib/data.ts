@@ -44,6 +44,45 @@ export async function getAllTopics(env?: any): Promise<Topic[]> {
   return getLocalTopics();
 }
 
+export async function getPopularTopics(env?: any): Promise<Topic[]> {
+  const SQL = `
+    SELECT t.*,
+      COALESCE(l.likes, 0) as likes_count,
+      COALESCE(c.comments, 0) as comments_count,
+      (COALESCE(l.likes, 0) * 3 + COALESCE(c.comments, 0) * 1) as score
+    FROM topics t
+    LEFT JOIN (
+      SELECT target_id, COUNT(*) as likes
+      FROM likes
+      WHERE target_type = 'topic'
+      GROUP BY target_id
+    ) l ON t.id = l.target_id
+    LEFT JOIN (
+      SELECT topic_id, COUNT(*) as comments
+      FROM comments
+      WHERE deleted_at IS NULL
+      GROUP BY topic_id
+    ) c ON t.id = c.topic_id
+    ORDER BY score DESC, t.created_at DESC
+    LIMIT 20
+  `;
+
+  if (env?.DB) {
+    try {
+      const result = await env.DB.prepare(SQL).all();
+      const rows = (result as any).results || result || [];
+      if (Array.isArray(rows) && rows.length > 0) return rows as Topic[];
+    } catch {}
+  }
+  // Fallback: get all topics and sort locally by comment count (no likes in local)
+  const all = await getLocalTopics();
+  return all.sort((a, b) => {
+    const aScore = (a.likes_count || 0) * 3 + (a.comments_count || 0);
+    const bScore = (b.likes_count || 0) * 3 + (b.comments_count || 0);
+    return bScore - aScore;
+  }).slice(0, 20);
+}
+
 export async function getTopicsByCategory(
   category: Category,
   env?: any

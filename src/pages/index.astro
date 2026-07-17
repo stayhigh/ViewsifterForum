@@ -1,11 +1,16 @@
 ---
 import Layout from "../layouts/Layout.astro";
-import { getAllTopics, getExcerpt } from "../lib/data";
+import { getAllTopics, getPopularTopics, getExcerpt } from "../lib/data";
 import { CATEGORY_META } from "../lib/types";
 
 const env = (Astro.locals as any).runtime?.env;
-const topics = await getAllTopics(env);
-const recent = topics.slice(0, 6);
+const sortMode = (Astro.url.searchParams.get("sort") || "latest") as "latest" | "popular";
+
+const all = sortMode === "popular"
+  ? await getPopularTopics(env)
+  : await getAllTopics(env);
+const recent = all.slice(0, 6);
+
 const userCookie = Astro.cookies.get("user_info")?.value;
 const isLoggedIn = !!userCookie;
 ---
@@ -42,7 +47,15 @@ const isLoggedIn = !!userCookie;
     )}
 
     <section class="feed">
-      <h2 class="feed-title">最新討論</h2>
+      <div class="feed-header">
+        <h2 class="feed-title">
+          {sortMode === "popular" ? "熱門討論" : "最新討論"}
+        </h2>
+        <nav class="feed-tabs">
+          <a href="/" class={`tab${sortMode === "latest" ? " active" : ""}`}>最新</a>
+          <a href="/?sort=popular" class={`tab${sortMode === "popular" ? " active" : ""}`}>熱門</a>
+        </nav>
+      </div>
       {
         recent.map((topic) => (
           <article class="topic-card">
@@ -54,7 +67,7 @@ const isLoggedIn = !!userCookie;
           </article>
         ))
       }
-      <p class="feed-footer">— 共 {topics.length} 篇討論 —</p>
+      <p class="feed-footer">— 共 {all.length} 篇討論 —</p>
     </section>
   </main>
 </Layout>
@@ -154,8 +167,40 @@ const isLoggedIn = !!userCookie;
     font-size: 1.1rem;
     font-weight: 400;
     color: var(--color-muted);
-    margin-bottom: 1.5rem;
     letter-spacing: 0.05em;
+  }
+
+  .feed-header {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    margin-bottom: 1.5rem;
+  }
+
+  .feed-tabs {
+    display: flex;
+    gap: 0.25rem;
+  }
+
+  .tab {
+    padding: 0.25rem 0.75rem;
+    border: 1px solid transparent;
+    border-radius: var(--radius);
+    font-size: 0.8rem;
+    color: var(--color-muted);
+    border-bottom: none;
+    transition: color 0.15s, border-color 0.15s;
+  }
+
+  .tab:hover {
+    color: var(--color-earth);
+    border-bottom: none;
+  }
+
+  .tab.active {
+    color: var(--color-earth);
+    border-color: var(--color-earth);
+    border-bottom: 1px solid var(--color-earth);
   }
 
   .topic-card {
