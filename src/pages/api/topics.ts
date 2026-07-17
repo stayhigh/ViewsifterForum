@@ -37,15 +37,12 @@ export const POST: APIRoute = async ({ request, cookies, locals }) => {
     return new Response("Invalid category", { status: 400 });
   }
 
-  // Slug: timestamp ensures uniqueness; append cleaned title prefix
-  const prefix = title
-    .replace(/[^\w\u4e00-\u9fff]/g, "")
-    .slice(0, 15)
-    .toLowerCase();
-  const slug = `${Date.now()}-${prefix || "topic"}`;
+  // Slug: timestamp + random ensures uniqueness
+  const rand = Math.random().toString(36).slice(2, 8);
+  const slug = `${Date.now()}-${rand}`;
 
   try {
-    const result = await env.DB.prepare(
+    await env.DB.prepare(
       `INSERT INTO topics (slug, user_id, category, title, content) 
        VALUES (?, ?, ?, ?, ?)`
     )
