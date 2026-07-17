@@ -51,13 +51,15 @@ export async function loginUser(
   email: string,
   password: string
 ): Promise<User | null> {
-  const row = await env.DB.prepare(
+  const result = await env.DB.prepare(
     "SELECT id, google_id, email, name, avatar, password_hash FROM users WHERE email = ?"
   )
     .bind(email)
-    .first();
+    .all();
 
-  if (!row) return null;
+  const rows = (result as any).results || result || [];
+  if (!Array.isArray(rows) || rows.length === 0) return null;
+  const row = rows[0];
 
   const valid = await verifyPassword(password, row.password_hash);
   if (!valid) return null;

@@ -28,13 +28,15 @@ export const POST: APIRoute = async ({ request, cookies, locals }) => {
 
   // Check if email already exists
   try {
-    const existing = await env.DB.prepare(
+    const result = await env.DB.prepare(
       "SELECT id FROM users WHERE email = ?"
     )
       .bind(email)
-      .first<{ id: number | null }>();
+      .all();
 
-    if (existing && existing.id != null) {
+    // D1 .all() returns { results: [...] }
+    const rows = (result as any).results || result || [];
+    if (Array.isArray(rows) && rows.length > 0) {
       return new Response(null, {
         status: 302,
         headers: { Location: "/auth/register?msg=此 Email 已被註冊" },
