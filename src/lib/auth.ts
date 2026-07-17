@@ -27,11 +27,12 @@ export async function registerUser(
   name: string
 ): Promise<User> {
   const passwordHash = await hashPassword(password);
+  // Use email as google_id to satisfy UNIQUE constraint (non-Google users)
   const result = await env.DB.prepare(
     `INSERT INTO users (google_id, email, name, avatar, password_hash) 
-     VALUES ('', ?, ?, '', ?)`
+     VALUES (?, ?, ?, '', ?)`
   )
-    .bind(email, name, passwordHash)
+    .bind(email, email, name, passwordHash)
     .run();
 
   // D1 .run() returns { meta: { last_row_id } } via wrapper
