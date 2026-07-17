@@ -7,8 +7,5 @@ export default defineConfig({
     platformProxy: {
       enabled: true,
     },
-    runtime: {
-      mode: "local",
-    },
   }),
 });
