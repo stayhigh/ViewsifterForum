@@ -1,4 +1,10 @@
-# ViewsForum — Domain Glossary
+# Viewsifter Forum — Domain Glossary
+
+## Project
+
+- **Name**: Viewsifter Forum (`viewsifter-forum`)
+- **Repository**: `stayhigh/ViewsifterForum` (GitHub)
+- **Local**: `~/workspace/ViewsifterForum/`
 
 ## Core Entities
 
@@ -34,7 +40,7 @@
 | Google OAuth auth flow (login/callback/logout) | ✅ |
 | Create topic / comment / like API routes | 🔧 (logic ready, needs authed user flow) |
 | Cloudflare Pages deployment | ⬜ pending |
-| forum.viewsifter.com custom domain | ⬜ pending |
+| forum.viewsifter.com custom domain | ✅ live |
 
 ## Behavior
 
