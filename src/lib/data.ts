@@ -1,6 +1,6 @@
 import { marked } from "marked";
-import type { Topic, Category } from "./types";
-import { getLocalTopics } from "./local-db";
+import type { Topic, Category, Comment } from "./types";
+import { getLocalTopics, getLocalDb } from "./local-db";
 
 // Data access layer.
 // Priority: D1 → local SQLite → JSON fallback
@@ -87,6 +87,50 @@ export async function getTopicBySlug(
 
 export function renderMarkdown(content: string): string {
   return marked(content) as string;
+}
+
+export async function getCommentsByTopicId(
+  topicId: number,
+  env?: any
+): Promise<Comment[]> {
+  if (env?.DB) {
+    try {
+      const result = await env.DB.prepare(
+        `SELECT c.id, c.topic_id, c.user_id, u.name as user_name, u.avatar as user_avatar,
+                c.content, c.created_at
+         FROM comments c
+         JOIN users u ON c.user_id = u.id
+         WHERE c.topic_id = ? AND c.deleted_at IS NULL
+         ORDER BY c.created_at ASC`
+      )
+        .bind(topicId)
+        .all();
+      const rows = (result as any).results || result || [];
+      if (Array.isArray(rows) && rows.length > 0) return rows as Comment[];
+    } catch {
+      // fall through to local
+    }
+  }
+  // Local fallback: read from SQLite
+  try {
+    const db = getLocalDb();
+    if (db) {
+      const rows = db
+        .prepare(
+          `SELECT c.id, c.topic_id, c.user_id, u.name as user_name, u.avatar as user_avatar,
+                  c.content, c.created_at
+           FROM comments c
+           JOIN users u ON c.user_id = u.id
+           WHERE c.topic_id = ? AND c.deleted_at IS NULL
+           ORDER BY c.created_at ASC`
+        )
+        .all(topicId) as Comment[];
+      return rows;
+    }
+  } catch {
+    // no local DB
+  }
+  return [];
 }
 
 export function getExcerpt(content: string, maxLen = 120): string {
