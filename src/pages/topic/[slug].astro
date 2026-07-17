@@ -1,6 +1,6 @@
 ---
 import Layout from "../../layouts/Layout.astro";
-import { getTopicBySlug, getCommentsByTopicId, renderMarkdown } from "../../lib/data";
+import { getTopicBySlug, getCommentsByTopicId, getLikesCount, userHasLiked, renderMarkdown } from "../../lib/data";
 import { CATEGORY_META } from "../../lib/types";
 import type { Category } from "../../lib/types";
 
@@ -21,6 +21,17 @@ const comments = await getCommentsByTopicId(Number(topic.id), env);
 // Check if user is logged in
 const userCookie = Astro.cookies.get("user_info")?.value;
 const isLoggedIn = !!userCookie;
+
+// Likes for the topic
+const topicId = Number(topic.id);
+const likesCount = await getLikesCount(topicId, "topic", env);
+let hasLiked = false;
+if (isLoggedIn) {
+  try {
+    const u = JSON.parse(userCookie!);
+    hasLiked = await userHasLiked(u.id, topicId, "topic", env);
+  } catch {}
+}
 ---
 
 <Layout>
@@ -40,6 +51,18 @@ const isLoggedIn = !!userCookie;
           })}
         </time>
         {topic.user_name && <span class="author">— {topic.user_name}</span>}
+        <span class="meta-sep">·</span>
+        {isLoggedIn ? (
+          <form action="/api/likes" method="POST" class="like-form" title={hasLiked ? "取消讚" : "按讚"}>
+            <input type="hidden" name="target_id" value={topicId} />
+            <input type="hidden" name="target_type" value="topic" />
+            <button type="submit" class={`btn-like${hasLiked ? " liked" : ""}`}>
+              {hasLiked ? "❤️" : "🤍"} {likesCount}
+            </button>
+          </form>
+        ) : (
+          <span class="likes-count">🤍 {likesCount}</span>
+        )}
       </div>
     </header>
 
@@ -124,6 +147,36 @@ const isLoggedIn = !!userCookie;
 
   .author {
     color: var(--color-earth);
+  }
+
+  .meta-sep {
+    color: var(--color-border);
+  }
+
+  .like-form {
+    display: inline;
+  }
+
+  .btn-like {
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-family: inherit;
+    font-size: inherit;
+    color: var(--color-muted);
+    padding: 0;
+  }
+
+  .btn-like.liked {
+    color: var(--color-earth);
+  }
+
+  .btn-like:hover {
+    opacity: 0.7;
+  }
+
+  .likes-count {
+    color: var(--color-muted);
   }
 
   .article-body {

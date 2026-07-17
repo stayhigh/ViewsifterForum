@@ -141,3 +141,45 @@ export function getExcerpt(content: string, maxLen = 120): string {
     .trim();
   return plain.length > maxLen ? plain.slice(0, maxLen) + "…" : plain;
 }
+
+export async function getLikesCount(
+  targetId: number,
+  targetType: "topic" | "comment",
+  env?: any
+): Promise<number> {
+  if (env?.DB) {
+    try {
+      const result = await env.DB.prepare(
+        "SELECT COUNT(*) as count FROM likes WHERE target_id = ? AND target_type = ?"
+      )
+        .bind(targetId, targetType)
+        .first();
+      const n = (result as any)?.count;
+      return typeof n === "number" ? n : 0;
+    } catch {
+      return 0;
+    }
+  }
+  return 0;
+}
+
+export async function userHasLiked(
+  userId: number,
+  targetId: number,
+  targetType: "topic" | "comment",
+  env?: any
+): Promise<boolean> {
+  if (env?.DB) {
+    try {
+      const row = await env.DB.prepare(
+        "SELECT id FROM likes WHERE user_id = ? AND target_id = ? AND target_type = ?"
+      )
+        .bind(userId, targetId, targetType)
+        .first();
+      return !!row;
+    } catch {
+      return false;
+    }
+  }
+  return false;
+}
