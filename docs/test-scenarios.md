@@ -243,7 +243,7 @@
 
 ## TS-06: Likes
 
-**Test Objective:** Verify like/unlike toggle on topics and comments.
+**Test Objective:** Verify like/unlike toggle on topics, including mobile touch targets (ADR-0007).
 
 **User Role:** Member
 
@@ -252,15 +252,15 @@
 **Starting Conditions:** Logged in as test@example.com. Topic exists.
 
 **Test Steps:**
-1. View topic → Like button visible
-2. Click "讚" → POST to `/api/likes` with `target_type=topic`
-3. Like count increments → Button shows "已讚" state
-4. Click again → Unlike (toggle), count decrements
+1. View topic → Like button visible (min 44×44px touch target)
+2. Click "🤍 N" → POST to `/api/likes` → toggles to "❤️ N+1"
+3. Click again → POST to `/api/likes` → toggles back to "🤍 N"
+4. Repeat on mobile viewport → touch target adequate
 
 **Expected Outcomes:**
 - One like per user per target (UNIQUE constraint)
-- Toggle behavior: like → unlike → like
-- Count updates without page refresh (eventually)
+- Toggle behavior: like → unlike → like works both desktop and mobile
+- Like count reflects server state after redirect
 
 ### TS-06.2: Like — Unauthenticated
 
@@ -345,8 +345,8 @@
 | TS-02: Registration | 3 | ✅ |
 | TS-03: Login/Logout | 3 | ✅ |
 | TS-04: Create Topic | 3 | ✅ |
-| TS-05: Replies | 2 | 🔧 |
-| TS-06: Likes | 2 | 🔧 |
+| TS-05: Replies | 2 | ✅ |
+| TS-06: Likes | 2 | ✅ |
 | TS-07: Design & RWD | 2 | ✅ |
 | TS-08: Performance | 3 | 🔧 |
 
