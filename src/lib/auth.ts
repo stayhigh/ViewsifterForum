@@ -29,7 +29,7 @@ export async function registerUser(
   const passwordHash = await hashPassword(password);
   const result = await env.DB.prepare(
     `INSERT INTO users (google_id, email, name, avatar, password_hash) 
-     VALUES (NULL, ?, ?, '', ?)`
+     VALUES ('', ?, ?, '', ?)`
   )
     .bind(email, name, passwordHash)
     .run();
