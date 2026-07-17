@@ -6,6 +6,8 @@ import { CATEGORY_META } from "../lib/types";
 const env = (Astro.locals as any).runtime?.env;
 const topics = await getAllTopics(env);
 const recent = topics.slice(0, 6);
+const userCookie = Astro.cookies.get("user_info")?.value;
+const isLoggedIn = !!userCookie;
 ---
 
 <Layout>
@@ -32,6 +34,12 @@ const recent = topics.slice(0, 6);
         <span class="category-desc">{CATEGORY_META.LIFE.desc}</span>
       </a>
     </nav>
+
+    {isLoggedIn && (
+      <div class="new-topic-cta">
+        <a href="/topic/new" class="btn-new-topic">＋ 發起新討論</a>
+      </div>
+    )}
 
     <section class="feed">
       <h2 class="feed-title">最新討論</h2>
@@ -118,6 +126,28 @@ const recent = topics.slice(0, 6);
   .feed {
     border-top: 1px solid var(--color-border);
     padding-top: 2.5rem;
+  }
+
+  .new-topic-cta {
+    text-align: center;
+    padding: 0 0 2rem;
+  }
+
+  .btn-new-topic {
+    display: inline-block;
+    padding: 0.5rem 2rem;
+    border: 1px solid var(--color-earth);
+    border-radius: var(--radius);
+    color: var(--color-earth);
+    font-size: 0.9rem;
+    letter-spacing: 0.05em;
+    transition: background 0.15s, color 0.15s;
+  }
+
+  .btn-new-topic:hover {
+    background: var(--color-earth);
+    color: var(--color-paper);
+    border-bottom: 1px solid var(--color-earth);
   }
 
   .feed-title {

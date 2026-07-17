@@ -28,7 +28,11 @@ const user = userCookie ? JSON.parse(userCookie) : null;
               <>
                 <a href="/topic/new" class="btn-new">＋ 發文</a>
                 <div class="user-menu">
-                  <img src={user.avatar} alt={user.name} class="user-avatar" width="28" height="28" />
+                  {user.avatar ? (
+                    <img src={user.avatar} alt={user.name} class="user-avatar" width="28" height="28" />
+                  ) : (
+                    <span class="avatar-placeholder">{user.name?.[0] || "?"}</span>
+                  )}
                   <span class="user-name">{user.name}</span>
                   <a href="/api/auth/logout" class="btn-logout">登出</a>
                 </div>
@@ -176,6 +180,19 @@ const user = userCookie ? JSON.parse(userCookie) : null;
     border-radius: 50%;
     width: 28px;
     height: 28px;
+  }
+
+  .avatar-placeholder {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    background: var(--color-earth);
+    color: var(--color-paper);
+    font-size: 0.75rem;
+    font-weight: 500;
   }
 
   .user-name {
