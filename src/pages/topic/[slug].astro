@@ -1,6 +1,6 @@
 ---
 import Layout from "../../layouts/Layout.astro";
-import { getTopicBySlug, getCommentsByTopicId, renderMarkdown } from "../../lib/data";
+import { getTopicBySlug, renderMarkdown } from "../../lib/data";
 import { CATEGORY_META } from "../../lib/types";
 import type { Category } from "../../lib/types";
 
@@ -14,13 +14,6 @@ if (!topic) {
 
 const meta = CATEGORY_META[topic.category];
 const catKey = topic.category.toLowerCase();
-
-// Fetch comments (use topic.id to get comments)
-const comments = await getCommentsByTopicId(Number(topic.id), env);
-
-// Check if user is logged in
-const userCookie = Astro.cookies.get("user_info")?.value;
-const isLoggedIn = !!userCookie;
 ---
 
 <Layout>
@@ -48,48 +41,8 @@ const isLoggedIn = !!userCookie;
     </article>
 
     <section class="comments-section">
-      <h2 class="comments-title">討論 ({comments.length})</h2>
-      
-      {comments.length === 0 && (
-        <p class="comments-empty">— 尚無回覆，登入後參與討論 —</p>
-      )}
-
-      {comments.map((c) => (
-        <div class="comment">
-          <div class="comment-meta">
-            <span class="comment-author">{c.user_name}</span>
-            <time datetime={c.created_at}>
-              {new Date(c.created_at).toLocaleDateString("zh-TW", {
-                year: "numeric",
-                month: "long",
-                day: "numeric",
-                hour: "2-digit",
-                minute: "2-digit",
-                timeZone: "UTC",
-              })}
-            </time>
-          </div>
-          <div class="comment-body" set:html={renderMarkdown(c.content)} />
-        </div>
-      ))}
-
-      {isLoggedIn ? (
-        <form action="/api/comments" method="POST" class="reply-form">
-          <input type="hidden" name="topic_slug" value={slug} />
-          <textarea
-            name="content"
-            rows={4}
-            placeholder="寫下你的想法…"
-            required
-            minlength={2}
-          ></textarea>
-          <button type="submit" class="btn-reply">回覆</button>
-        </form>
-      ) : (
-        <div class="login-cta">
-          <p>— <a href="/auth/login">登入</a>後參與討論 —</p>
-        </div>
-      )}
+      <h2 class="comments-title">討論</h2>
+      <p class="comments-empty">— 尚無回覆，登入後參與討論 —</p>
     </section>
   </main>
 </Layout>
@@ -197,95 +150,5 @@ const isLoggedIn = !!userCookie;
     color: var(--color-muted);
     font-size: 0.9rem;
     padding: 2rem 0;
-  }
-
-  .comment {
-    padding: 1.25rem 0;
-    border-bottom: 1px solid var(--color-border);
-  }
-
-  .comment:first-of-type {
-    border-top: 1px solid var(--color-border);
-  }
-
-  .comment-meta {
-    display: flex;
-    align-items: baseline;
-    gap: 0.75rem;
-    margin-bottom: 0.5rem;
-    font-size: 0.8rem;
-  }
-
-  .comment-author {
-    color: var(--color-earth);
-    font-weight: 500;
-  }
-
-  .comment-meta time {
-    color: var(--color-muted);
-  }
-
-  .comment-body {
-    font-size: 0.95rem;
-    line-height: 1.8;
-    color: var(--color-ink);
-  }
-
-  .comment-body :global(p) {
-    margin: 0.35rem 0;
-  }
-
-  .reply-form {
-    margin-top: 2rem;
-    padding-top: 1.5rem;
-    border-top: 1px solid var(--color-border);
-  }
-
-  .reply-form textarea {
-    width: 100%;
-    padding: 0.75rem 1rem;
-    border: 1px solid var(--color-border);
-    border-radius: 4px;
-    background: var(--color-paper);
-    color: var(--color-ink);
-    font-family: inherit;
-    font-size: 0.95rem;
-    line-height: 1.7;
-    resize: vertical;
-    min-height: 100px;
-  }
-
-  .reply-form textarea:focus {
-    outline: none;
-    border-color: var(--color-earth);
-  }
-
-  .btn-reply {
-    margin-top: 0.75rem;
-    padding: 0.5rem 1.5rem;
-    border: 1px solid var(--color-earth);
-    border-radius: 4px;
-    background: transparent;
-    color: var(--color-earth);
-    font-family: inherit;
-    font-size: 0.9rem;
-    cursor: pointer;
-    transition: background 0.15s, color 0.15s;
-  }
-
-  .btn-reply:hover {
-    background: var(--color-earth);
-    color: var(--color-paper);
-  }
-
-  .login-cta {
-    text-align: center;
-    padding: 2rem 0 1rem;
-    color: var(--color-muted);
-    font-size: 0.9rem;
-  }
-
-  .login-cta a {
-    color: var(--color-earth);
   }
 </style>
