@@ -32,9 +32,9 @@ export const POST: APIRoute = async ({ request, cookies, locals }) => {
       "SELECT id FROM users WHERE email = ?"
     )
       .bind(email)
-      .first();
+      .first<{ id: number | null }>();
 
-    if (existing) {
+    if (existing && existing.id != null) {
       return new Response(null, {
         status: 302,
         headers: { Location: "/auth/register?msg=此 Email 已被註冊" },
