@@ -1,6 +1,6 @@
 import { marked } from "marked";
 import type { Topic, Category, Comment } from "./types";
-import { getLocalTopics, getLocalDb } from "./local-db";
+import { getLocalTopics } from "./local-db";
 
 // Data access layer.
 // Priority: D1 → local SQLite → JSON fallback
@@ -111,9 +111,10 @@ export async function getCommentsByTopicId(
       // fall through to local
     }
   }
-  // Local fallback: read from SQLite
+  // Local fallback: dynamically import local-db
   try {
-    const db = getLocalDb();
+    const { getLocalDb } = await import("./local-db");
+    const db = await getLocalDb();
     if (db) {
       const rows = db
         .prepare(
