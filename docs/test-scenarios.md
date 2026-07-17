@@ -1,7 +1,7 @@
 # ViewsForum Test Scenarios
 
 **Product:** ViewsForum v0.1 MVP  
-**Date:** 2026-07-16  
+**Date:** 2026-07-17  
 **Test Environment:** `http://localhost:4321` (dev), `https://forum.viewsifter.com` (prod)
 
 ---
@@ -172,14 +172,15 @@
 2. Select category "科技奇點" (AI)
 3. Enter title "測試文章標題"
 4. Enter markdown content "## 這是測試\n\n內容測試 **粗體**"
-5. Click "發佈" → POST to `/api/topics`
-6. Redirect to new topic page `/topic/測試文章標題`
+5. Click "發佈" → POST to `/api/topics`, INSERT into D1
+6. Redirect to new topic page `/topic/{timestamp}-{random}` (e.g. `/topic/1784291505889-a3f8k2`)
 
 **Expected Outcomes:**
-- Slug auto-generated from title
-- Category saved as "AI"
-- Topic appears on homepage and `/category/ai`
+- Slug = `{Date.now()}-{random6chars}` format, entirely ASCII
+- Category saved correctly
+- Topic appears on homepage and category page
 - Author name displayed on topic page
+- Topic detail page loads and renders Markdown content
 
 ### TS-04.2: Create Topic — Unauthenticated
 
@@ -344,9 +345,9 @@
 | TS-02: Registration | 3 | ✅ |
 | TS-03: Login/Logout | 3 | ✅ |
 | TS-04: Create Topic | 3 | ✅ |
-| TS-05: Replies | 2 | |
-| TS-06: Likes | 2 | |
-| TS-07: Design & RWD | 2 | |
-| TS-08: Performance | 3 | |
+| TS-05: Replies | 2 | 🔧 |
+| TS-06: Likes | 2 | 🔧 |
+| TS-07: Design & RWD | 2 | ✅ |
+| TS-08: Performance | 3 | 🔧 |
 
 **Total:** 21 test scenarios across 8 user stories.
