@@ -11,11 +11,17 @@ export const GET: APIRoute = async ({ locals }) => {
   }
 
   const email = "a@b.com";
-  const raw = await env.DB.prepare(
+  const rawFirst = await env.DB.prepare(
     "SELECT id FROM users WHERE email = ?"
   )
     .bind(email)
     .first();
+
+  const rawAll = await env.DB.prepare(
+    "SELECT id FROM users WHERE email = ?"
+  )
+    .bind(email)
+    .all();
 
   const allUsers = await env.DB.prepare(
     "SELECT id, email FROM users LIMIT 5"
@@ -23,13 +29,13 @@ export const GET: APIRoute = async ({ locals }) => {
 
   return new Response(JSON.stringify({
     email,
-    raw_result: raw,
-    raw_type: typeof raw,
-    raw_is_null: raw === null,
-    raw_is_undefined: raw === undefined,
-    raw_truthy: !!raw,
-    raw_keys: raw ? Object.keys(raw) : [],
-    raw_json: JSON.stringify(raw),
+    first_result: rawFirst,
+    first_is_null: rawFirst === null,
+    all_result: rawAll,
+    all_type: typeof rawAll,
+    all_results: (rawAll as any).results,
+    all_length: Array.isArray((rawAll as any).results) ? (rawAll as any).results.length : 'not_array',
+    all_is_array: Array.isArray((rawAll as any).results),
     all_users: allUsers.results || allUsers,
   }, null, 2), {
     status: 200,
